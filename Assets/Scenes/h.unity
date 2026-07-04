@@ -420,6 +420,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c8d1d19f45224949bdc6c3c842058bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
+  speed: 2
+  cooldown: 0.1
 --- !u!136 &1645895442
 CapsuleCollider:
   m_ObjectHideFlags: 0
