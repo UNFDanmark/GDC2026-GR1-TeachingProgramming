@@ -12,17 +12,13 @@ public class PlayerScript : MonoBehaviour
     public float cameraSensY;
     public GameObject cameraGameObject;
     Rigidbody rb;
-    //public InputAction RotAction;
     public float moveSpeed = 100f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         actionMovement.action.Enable();
         actionLook.action.Enable();
-        //RotAction.Enable();
         print("Ich bin Søren");
         rb = GetComponent<Rigidbody>();
-        //transform = GetComponent<Transform>();
     }
 
     void OnDisable()
@@ -31,14 +27,8 @@ public class PlayerScript : MonoBehaviour
         actionLook.action.Disable();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //Vector2 cool = RotAction.ReadValue<Vector2>();
-        //if (cool.x > 0) transform.Rotate(0, 2, 0);
-        //else if (cool.x < 0) transform.Rotate(0,-2,0);
-        //rb.AddRelativeForce(new Vector3(0, 0, cool.y * speed * rb.linearDamping));
-        
         Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
         Vector3 look = new Vector3(rawLookInput.y * cameraSensY, 0, 0);
         cameraGameObject.transform.Rotate(look);
@@ -53,5 +43,12 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Coin"))
             Destroy(collision.gameObject);
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            print("Du tabte");
+        }
     }
 }

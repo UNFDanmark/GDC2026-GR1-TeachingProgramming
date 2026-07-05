@@ -10,7 +10,7 @@ public class shootingscript : MonoBehaviour
     public GameObject shootingPoint;
     public float bulletspeed = 1000;
     GameObject bullet;
-    public InputAction shoot;
+    public InputActionReference shoot;
 
 
     public float bulletExpire = 2.0f;
@@ -19,25 +19,18 @@ public class shootingscript : MonoBehaviour
     
     void Start()
     {
-        shoot.Enable();
+        shoot.action.Enable();
     }
 
-    // Update is called once per frame
     void Update()
     {
-
-
-
-        if (shoot.WasPerformedThisFrame() && CooldownLeft <= 0)
+        if (shoot.action.IsPressed() && CooldownLeft <= 0)
         {
             bullet = Instantiate(bulletPrefab, shootingPoint.transform.position, shootingPoint.transform.rotation);
             bullet.GetComponentInChildren<Rigidbody>().AddForce(transform.forward * bulletspeed, ForceMode.Impulse);
             GameObject.Destroy(bullet,bulletExpire);
             CooldownLeft = Cooldown;
         }
-
         CooldownLeft -= Time.deltaTime;
-        
-        //if (CooldownLeft <= 0 && bullet != null) GameObject.Destroy(bullet);
     }
 }
