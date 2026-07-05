@@ -30,8 +30,8 @@ public class shootingscript : MonoBehaviour
 
         if (shoot.WasPerformedThisFrame() && CooldownLeft <= 0)
         {
-            bullet = Instantiate(bulletPrefab, shootingPoint.transform.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletspeed);
+            bullet = Instantiate(bulletPrefab, shootingPoint.transform.position, shootingPoint.transform.rotation);
+            bullet.GetComponentInChildren<Rigidbody>().AddForce(transform.forward * bulletspeed, ForceMode.Impulse);
             GameObject.Destroy(bullet,bulletExpire);
             CooldownLeft = Cooldown;
         }

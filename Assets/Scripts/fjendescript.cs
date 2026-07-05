@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class fjendescript : MonoBehaviour
@@ -12,5 +13,10 @@ public class fjendescript : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Bullet")) Destroy(gameObject);
     }
 }
