@@ -5,29 +5,33 @@ using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
-    //Transform transform;
-    public InputActionReference actionMovement;
-    public InputActionReference actionLook;
-    public InputActionReference actionRestart;
-    public float cameraSensX;
-    public float cameraSensY;
-    public GameObject cameraGameObject;
     Rigidbody rb;
     Animator animator;
+    GameObject bullet;
+    AudioSource audiosource;
+    [Header("Movement")]
+    public InputActionReference actionMovement;
     public float moveSpeed = 100f;
+    [Header("Look")]
+    public InputActionReference actionLook;
+    public GameObject cameraGameObject;
+    public float cameraSensX;
+    public float cameraSensY;
+    [Header("Restart")]
+    public InputActionReference actionRestart;
+    public Canvas gameOverCanvas;
+    [Header("Health")]
+    public TMP_Text healthTMPText;
+    public int maxHealth = 3;
+    int health;
+    [Header("Shoot")]
+    public InputActionReference actionShoot;
     public GameObject bulletPrefab;
     public GameObject shootingPoint;
     public float bulletspeed = 5;
-    GameObject bullet;
-    public InputActionReference actionShoot;
     public float bulletExpire = 2.0f;
     public float Cooldown = 10.0f;
     float CooldownLeft;
-    AudioSource audiosource;
-    public int maxHealth = 3;
-    int health;
-    public Canvas gameOverCanvas;
-    public TMP_Text healthTMPText;
     void Start()
     {
         actionMovement.action.Enable();
@@ -48,7 +52,9 @@ public class PlayerScript : MonoBehaviour
         actionMovement.action.Disable();
         actionLook.action.Disable();
         actionShoot.action.Disable();
+        actionRestart.action.Disable();
         actionShoot.action.started -= Shoot;
+        actionRestart.action.started -= Restart;
     }
 
     void Update()
@@ -89,7 +95,9 @@ public class PlayerScript : MonoBehaviour
         if (CooldownLeft <= 0)
         {
             bullet = Instantiate(bulletPrefab, shootingPoint.transform.position, shootingPoint.transform.rotation);
-            bullet.GetComponentInChildren<Rigidbody>().AddForce(transform.forward * bulletspeed, ForceMode.Impulse);
+            Rigidbody rbbullet = bullet.GetComponentInChildren<Rigidbody>();
+            rbbullet.linearVelocity = rb.linearVelocity;
+            rbbullet.AddForce(transform.forward * bulletspeed, ForceMode.Impulse);
             GameObject.Destroy(bullet, bulletExpire);
             animator.SetTrigger("shoot");
             audiosource.Play();
