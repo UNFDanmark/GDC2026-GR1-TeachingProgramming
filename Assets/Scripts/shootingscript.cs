@@ -11,7 +11,7 @@ public class shootingscript : MonoBehaviour
     public float bulletspeed = 1000;
     GameObject bullet;
     public InputActionReference shoot;
-
+    AudioSource audiosource;
 
     public float bulletExpire = 2.0f;
     public float Cooldown = 10.0f;
@@ -20,6 +20,7 @@ public class shootingscript : MonoBehaviour
     void Start()
     {
         shoot.action.Enable();
+        audiosource = GetComponent<AudioSource>();
     }
 
     void Update()

@@ -14,10 +14,14 @@ public class fjendescript : MonoBehaviour
     public float Cooldown = 10.0f;
     float CooldownLeft;
     GameObject bullet;
+    Animator animator;
+    Rigidbody rb;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         destination = FindAnyObjectByType<PlayerScript>().gameObject;
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
     }
     void Update()
     {
@@ -34,10 +38,12 @@ public class fjendescript : MonoBehaviour
                     bullet.GetComponentInChildren<Rigidbody>()
                         .AddForce(transform.forward * bulletspeed, ForceMode.Impulse);
                     GameObject.Destroy(bullet, bulletExpire);
+                    animator.SetTrigger("shoot");
                     CooldownLeft = Cooldown;
                 }
             }
         }
+        animator.SetFloat("speed", rb.linearVelocity.magnitude);
         CooldownLeft -= Time.deltaTime;
     }
 

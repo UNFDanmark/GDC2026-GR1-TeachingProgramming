@@ -1,13 +1,14 @@
-using System;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
     //Transform transform;
     public InputActionReference actionMovement;
     public InputActionReference actionLook;
+    public InputActionReference actionRestart;
     public float cameraSensX;
     public float cameraSensY;
     public GameObject cameraGameObject;
@@ -22,15 +23,24 @@ public class PlayerScript : MonoBehaviour
     public float bulletExpire = 2.0f;
     public float Cooldown = 10.0f;
     float CooldownLeft;
+    AudioSource audiosource;
+    public int maxHealth = 3;
+    int health;
+    public Canvas gameOverCanvas;
+    public TMP_Text healthTMPText;
     void Start()
     {
         actionMovement.action.Enable();
         actionLook.action.Enable();
         actionShoot.action.Enable();
+        actionRestart.action.Enable();
         actionShoot.action.started += Shoot;
-        print("Ich bin Søren");
+        actionRestart.action.started += Restart;
         rb = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
+        audiosource = GetComponentInChildren<AudioSource>();
+        health = maxHealth;
+        healthTMPText.text = "Health: " + health + " / " + maxHealth;
     }
 
     void OnDisable()
@@ -65,7 +75,12 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            print("Du tabte");
+            health--;
+            healthTMPText.text = "Health: " + health + " / " + maxHealth;
+            if (health <= 0)
+            {
+                gameOverCanvas.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -77,7 +92,13 @@ public class PlayerScript : MonoBehaviour
             bullet.GetComponentInChildren<Rigidbody>().AddForce(transform.forward * bulletspeed, ForceMode.Impulse);
             GameObject.Destroy(bullet, bulletExpire);
             animator.SetTrigger("shoot");
+            audiosource.Play();
             CooldownLeft = Cooldown;
         }
+    }
+
+    void Restart(InputAction.CallbackContext context)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
